@@ -15,7 +15,7 @@ export default {
       this.widget = new OktaSignIn({
         baseUrl: 'https://dev-364313.okta.com',
         clientId: '0oa3e2hnb2jqsNipY4x7',
-        redirectUri: 'http://localhost:8080/login/callback',
+        redirectUri: 'https://master.d2e0r6wdrmawu9.amplifyapp.com/login/callback',
         logo: require('../assets/app_logo4.png'),
         features: { registration:true },
         authParams: {
