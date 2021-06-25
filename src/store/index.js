@@ -56,6 +56,7 @@ export default new Vuex.Store({
     },
     actions: {
         getWineApiKey({ commit }, claims) {
+          console.log("in getWineApiKey");
           axios.get('/api/users/' + claims.sub)
             .then(result => commit('updateUserProfile', result.data))
             .catch(console.error);
@@ -85,13 +86,16 @@ export default new Vuex.Store({
             }  */           
         },
         getBottles({ commit, state }) {
+            console.log("getting bottles...");
             const headers = { 'Cache-Control' : 'no-cache' };
             return new Promise((resolve, reject) => {
                 axios.get('/api/userbottles?owner_guid=' + state.wineApiKey, { headers })
                     .then((result) => {
+                            console.log("in then...");
                             commit('updateBottlesFromApi', result.data);
                             resolve(result);
                         }, error => {
+                            console.log("in error...");
                             reject(error);
                     });
             }) 
