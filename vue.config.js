@@ -2,7 +2,7 @@ module.exports = {
     devServer: {
         proxy: {
             '/api': {
-                target: 'http://wineapi-dev.us-east-1.elasticbeanstalk.com',        
+                target: 'https://oenofile-api.azurewebsites.net',        
                 /* target: 'http://localhost:51044', */
                 changeOrigin: true,
             },
