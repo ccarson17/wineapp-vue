@@ -105,14 +105,19 @@ export default {
           swalColor: "#355c37",       
         }],
         currentThemeName: null,
-        currentTheme: {},
+        currentTheme: {
+          name: "Default",
+          href: "/css/default.css",
+          id: "default-theme-style",  
+          swalColor: "#396485"       
+        },
       }
   },
   created () {
     document.getElementsByTagName("BODY")[0].style.display = "none";
     this.isAuthenticated();
     this.$auth.authStateManager.subscribe(this.isAuthenticated);
-    this.currentTheme = this.$store.state.theme;
+    if(this.$store.state.theme) this.currentTheme = this.$store.state.theme;
     this.changeTheme();
   },
   computed: {
