@@ -57,7 +57,8 @@ export default new Vuex.Store({
     actions: {
         getWineApiKey({ commit }, claims) {
           console.log("in getWineApiKey");
-          axios.get('/api/users/' + claims.sub)
+          console.log(process.env.VUE_APP_API_URL);
+          axios.get(process.env.VUE_APP_API_URL + '/users/' + claims.sub)
             .then(result => commit('updateUserProfile', result.data))
             .catch(console.error);
             return new Promise((resolve, reject) => {

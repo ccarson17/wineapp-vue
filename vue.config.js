@@ -8,11 +8,4 @@ module.exports = {
             },
         },
     },
-    proxyTable: {
-        '/api': {
-            target: 'http://wineapi-dev.us-east-1.elasticbeanstalk.com',        
-            changeOrigin: true,
-        },
-    },
-
 }
