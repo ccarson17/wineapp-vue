@@ -62,7 +62,7 @@ export default new Vuex.Store({
             .then(result => commit('updateUserProfile', result.data))
             .catch(console.error);
             return new Promise((resolve, reject) => {
-                axios.get('/api/users/' + claims.sub)
+                axios.get(process.env.VUE_APP_API_URL + '/users/' + claims.sub)
                     .then((result) => {
                         console.log("in getWineApiKey then...");
                         console.log(result.data);
@@ -93,7 +93,7 @@ export default new Vuex.Store({
             console.log("getting bottles...");
             const headers = { 'Cache-Control' : 'no-cache' };
             return new Promise((resolve, reject) => {
-                axios.get('/api/userbottles?owner_guid=' + state.wineApiKey, { headers })
+                axios.get(process.env.VUE_APP_API_URL + '/userbottles?owner_guid=' + state.wineApiKey, { headers })
                     .then((result) => {
                             console.log("in then...");
                             commit('updateBottlesFromApi', result.data);
@@ -107,7 +107,7 @@ export default new Vuex.Store({
         getCurrentBottles({ commit, state }) {
             const headers = { 'Cache-Control' : 'no-cache' };           
             return new Promise((resolve, reject) => {
-                axios.get('/api/userbottles?getCurrentOrHistory=current&orderBy=created_date desc&owner_guid=' + state.wineApiKey, { headers })
+                axios.get(process.env.VUE_APP_API_URL + '/userbottles?getCurrentOrHistory=current&orderBy=created_date desc&owner_guid=' + state.wineApiKey, { headers })
                     .then((result) => {
                         commit('updateCurrentBottlesFromApi', result.data);
                         resolve(result);
@@ -119,7 +119,7 @@ export default new Vuex.Store({
         getHistoryBottles({ commit, state }) {
             const headers = { 'Cache-Control' : 'no-cache' };
             return new Promise((resolve, reject) => {
-                axios.get('/api/userbottles?getCurrentOrHistory=history&orderBy=drink_date desc&owner_guid=' + state.wineApiKey, { headers })
+                axios.get(process.env.VUE_APP_API_URL + '/userbottles?getCurrentOrHistory=history&orderBy=drink_date desc&owner_guid=' + state.wineApiKey, { headers })
                     .then((result) => {
                         commit('updateHistoryBottlesFromApi', result.data);
                         resolve(result);
@@ -131,7 +131,7 @@ export default new Vuex.Store({
         getUnassignedBottles({ commit, state }) {
             const headers = { 'Cache-Control' : 'no-cache' };           
             return new Promise((resolve, reject) => {
-                axios.get('/api/userbottles?getCurrentOrHistory=current&assigned=no&orderBy=created_date desc&owner_guid=' + state.wineApiKey, { headers })
+                axios.get(process.env.VUE_APP_API_URL + '/userbottles?getCurrentOrHistory=current&assigned=no&orderBy=created_date desc&owner_guid=' + state.wineApiKey, { headers })
                     .then((result) => {
                         commit('updateUnassignedBottlesFromApi', result.data);
                         resolve(result);
@@ -181,7 +181,7 @@ export default new Vuex.Store({
 
             if(state.wineApiKey) {
                 return new Promise((resolve, reject) => {
-                    axios.post('/api/userbottlesez', thisBottle)
+                    axios.post(process.env.VUE_APP_API_URL + '/userbottlesez', thisBottle)
                         .then((result) => {
                             resolve(result);
                         }, error => {
@@ -204,7 +204,7 @@ export default new Vuex.Store({
             };
             if(state.wineApiKey) {
                 return new Promise((resolve, reject) => {
-                    axios.patch('/api/userbottles/' + bottle.guid + '?ownerId=' + state.wineApiKey, data, { headers })
+                    axios.patch(process.env.VUE_APP_API_URL + '/userbottles/' + bottle.guid + '?ownerId=' + state.wineApiKey, data, { headers })
                         .then((result) => {
                             resolve(result);
                         }, error => {
@@ -226,7 +226,7 @@ export default new Vuex.Store({
             };
             if(state.wineApiKey) {
                 return new Promise((resolve, reject) => {
-                    axios.patch('/api/userbottles/' + bottle.guid + '?ownerId=' + state.wineApiKey, data, { headers })
+                    axios.patch(process.env.VUE_APP_API_URL + '/userbottles/' + bottle.guid + '?ownerId=' + state.wineApiKey, data, { headers })
                         .then((result) => {
                             resolve(result);
                         }, error => {
@@ -238,7 +238,7 @@ export default new Vuex.Store({
         deleteBottle({ state }, bottle) {
             if(state.wineApiKey) {
                 return new Promise((resolve, reject) => {
-                    axios.delete('/api/userbottles/' + bottle.guid + '?ownerId=' + state.wineApiKey)
+                    axios.delete(process.env.VUE_APP_API_URL + '/userbottles/' + bottle.guid + '?ownerId=' + state.wineApiKey)
                         .then((result) => {
                             resolve(result);
                         }, error => {
@@ -280,7 +280,7 @@ export default new Vuex.Store({
             };
             if(state.wineApiKey) {
                 return new Promise((resolve, reject) => {
-                    axios.post('/api/userbottlesez/', thisBottle)
+                    axios.post(process.env.VUE_APP_API_URL + '/userbottlesez/', thisBottle)
                         .then((result) => {
                             resolve(result);
                         }, error => {
@@ -332,7 +332,7 @@ export default new Vuex.Store({
             };
             if(state.wineApiKey) {
                 return new Promise((resolve, reject) => {
-                    axios.patch('/api/userbottlesez/' + bottle.guid + '?ownerId=' + state.wineApiKey, data, { headers })
+                    axios.patch(process.env.VUE_APP_API_URL + '/userbottlesez/' + bottle.guid + '?ownerId=' + state.wineApiKey, data, { headers })
                         .then((result) => {
                             resolve(result);
                         }, error => {
@@ -344,7 +344,7 @@ export default new Vuex.Store({
         getRacks({ commit, state }) {
             const headers = { 'Cache-Control' : 'no-cache' };
             return new Promise((resolve, reject) => {
-                axios.get('/api/racks?owner_guid=' + state.wineApiKey, { headers })
+                axios.get(process.env.VUE_APP_API_URL + '/racks?owner_guid=' + state.wineApiKey, { headers })
                     .then((result) => {
                             commit('updateRacksFromApi', result.data);
                             resolve(result);
@@ -366,7 +366,7 @@ export default new Vuex.Store({
             };
             if(state.wineApiKey) {
                 return new Promise((resolve, reject) => {
-                    axios.patch('/api/racks/' + rack.guid + '?ownerId=' + state.wineApiKey, data, { headers })
+                    axios.patch(process.env.VUE_APP_API_URL + '/racks/' + rack.guid + '?ownerId=' + state.wineApiKey, data, { headers })
                         .then((result) => {
                             console.log(result.status);
                             resolve(result);
@@ -385,7 +385,7 @@ export default new Vuex.Store({
             };
             if(state.wineApiKey) {
                 return new Promise((resolve, reject) => {
-                    axios.post('/api/racks/', thisRack)
+                    axios.post(process.env.VUE_APP_API_URL + '/racks/', thisRack)
                         .then((result) => {
                             resolve(result);
                         }, error => {
@@ -397,7 +397,7 @@ export default new Vuex.Store({
         deleteRack({ state }, rack) {
             if(state.wineApiKey) {
                 return new Promise((resolve, reject) => {
-                    axios.delete('/api/racks/' + rack.guid + '?ownerId=' + state.wineApiKey)
+                    axios.delete(process.env.VUE_APP_API_URL + '/racks/' + rack.guid + '?ownerId=' + state.wineApiKey)
                         .then((result) => {
                             resolve(result);
                         }, error => {
