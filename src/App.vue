@@ -58,7 +58,7 @@
         <li class="dropdown-email">{{this.$store.state.userEmail}}</li>
         <li><hr class="dropdown-divider"></li>
         <li><router-link to="/settings" v-if="authenticated" class="dropdown-item dropdown-theme">Settings</router-link></li>
-        <li><router-link to="/profile" v-if="authenticated" class="dropdown-item dropdown-theme">Profile</router-link></li>
+        <!-- <li><router-link to="/profile" v-if="authenticated" class="dropdown-item dropdown-theme">Profile</router-link></li> -->
         <li><router-link to="/import" v-if="authenticated" class="dropdown-item dropdown-theme">Import Data</router-link></li>
         <li><hr class="dropdown-divider"></li>
         <li><router-link to="/" v-on:click.native="logout()" class="dropdown-item dropdown-theme">Log Out</router-link></li>
