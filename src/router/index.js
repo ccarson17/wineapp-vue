@@ -17,7 +17,8 @@ Vue.use(VueRouter)
 const oktaAuth = new OktaAuth({
   issuer: 'https://dev-364313.okta.com/oauth2/default',
   clientId: '0oa3e2hnb2jqsNipY4x7',
-  redirectUri: window.location.origin + '/login/callback',
+  /* redirectUri: window.location.origin + '/login/callback', */
+  redirectUri: 'https://master.d2e0r6wdrmawu9.amplifyapp.com/login/callback',
   scopes: ['openid', 'profile', 'email']
 })
 Vue.use(Auth, { oktaAuth })
