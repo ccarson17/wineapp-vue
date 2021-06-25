@@ -1,14 +1,15 @@
 <template>
   <div id="profile" class="content-centered-horizontal text-default">
     <h1>Settings / Profile</h1>
-    <p>
+    <br/>
+    <h3>
       Site Settings
-    </p>
-    <table class="content-centered-absolute">
+    </h3>
+    <table class="content-centered-horizontal text-default mx-auto">
       <tbody>
         <tr>
           <td style="text-align: right; padding-right:10px">
-            Theme
+            <span class="fw-bold mx-2">Theme</span>
           </td>
           <td>
             <select @change="changeTheme()" id="themeSelector" class="form-select input-color" aria-label="Theme selector" v-model="currentThemeName">
@@ -18,10 +19,13 @@
         </tr>
       </tbody>
     </table>
-    <p>
-      Profile Info (from Okta).
-    </p>
-    <table class="content-centered-absolute">
+    <br/>
+    <br/>
+    <br/>
+    <h3>
+      Profile Info (from Okta)
+    </h3>
+    <table class="content-centered-horizontal text-default mx-auto">
       <thead>
         <tr>
           <th style="text-align: right; padding-right:10px">Claim</th>

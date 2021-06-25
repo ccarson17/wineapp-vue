@@ -15,9 +15,9 @@ export default {
       this.widget = new OktaSignIn({
         baseUrl: 'https://dev-364313.okta.com',
         clientId: '0oa3e2hnb2jqsNipY4x7',
-        redirectUri: 'https://yellow-sky-04dc6760f.azurestaticapps.net/login/callback',
+        /* redirectUri: 'https://yellow-sky-04dc6760f.azurestaticapps.net/login/callback', */
         /* redirectUri: 'https://master.d2e0r6wdrmawu9.amplifyapp.com/login/callback', */
-        /* redirectUri: 'http://localhost:8080/login/callback', */
+        redirectUri: process.env.VUE_APP_OKTA_CALLBACK,
         logo: require('../assets/app_logo4.png'),
         features: { registration:true },
         authParams: {
