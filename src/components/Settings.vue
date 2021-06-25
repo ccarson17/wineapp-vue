@@ -1,12 +1,12 @@
 <template>
-  <div class="hello">
-    <h1>It is your birthday.</h1>
+  <div class="content-centered-horizontal">
+    <h1>Settings</h1>
   </div>
 </template>
 
 <script>
 export default {
-  name: 'HelloWorld',
+  name: 'Settings',
   props: {
     msg: String
   }

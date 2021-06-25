@@ -1,0 +1,81 @@
+h1,h2,h3,p {
+    color: #000000;
+}
+
+.text-default {
+    color: #000000;
+}
+
+.text-default-alt {
+    color: white;
+}
+
+.bg-default {
+    background-color: white;
+}
+
+.bottle-background {
+    background-color: #FFFFFF;
+    margin: 5px 5px 5px 0px;
+    padding: 10px;
+    min-width: 200px;
+    width: 100%;
+    border-radius: 0 15px 15px 0;
+  }
+
+  .bottle-card :hover {
+    background-color: #DDDDDD;
+  }
+
+  .sidebar-text {
+    color: #212529;
+  }
+
+  .sidebar-link {
+    color: #212529;
+  }
+
+  .sidebar-link:hover, .sidebar-link:active {
+    text-decoration: none;
+    color: #212529; 
+  }
+
+  .sidebar-bg {
+    background-color: white;
+  }
+
+  .active-bg {
+    background-color: #5599CC !important;
+  }
+
+  .content-bg {
+    background-color: #f8f9fa;
+  }
+
+.header-bg-color {
+    background-color: #396485;
+}
+.btn-primary {
+    color: #fff;
+    background-color: #5599CC;
+    border-color: #5599CC; 
+    width: 90%;
+}
+.btn-primary:hover, .btn-primary:focus, .btn-primary:active, .btn-primary.active, .open>.dropdown-toggle.btn-primary {
+    color: #fff;
+    background-color: #396485;
+    border-color: #396485; /*set the color you want here*/
+}
+
+.divider {
+    color: #fff;
+    border-radius: 10px;
+    text-align: left;
+    padding: 4px 0px 4px 15px;
+    margin: 20px 20px 0px 20px;
+    font-weight: bold;
+}
+
+.input-color {
+    background-color: white;
+}
