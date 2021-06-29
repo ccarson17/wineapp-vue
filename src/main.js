@@ -28,12 +28,14 @@ Vue.use(VueSweetalert2, options);
 Vue.config.productionTip = false
 Vue.filter('dateFormat', function(value) {
   if (value) {
-    return moment(String(value)).format('MM/DD/YYYY');
+    var utcDateTime = moment.utc(String(value));
+    return moment(utcDateTime).local().format('MM/DD/YYYY');
   }
 });
 Vue.filter('dateTimeFormat', function(value) {
   if (value) {
-    return moment(String(value)).format('MM/DD/YYYY hh:mm');
+    var utcDateTime = moment.utc(String(value));
+    return moment(utcDateTime).local().format('MM/DD/YYYY h:mm A');
   }
 });
 Vue.filter('currencyFilter', function(value, symbol) {
