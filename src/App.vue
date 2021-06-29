@@ -1,73 +1,85 @@
 <template>
-  <div id="app" class="d-flex flex-row" style="height: 100%">
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
-      rel="stylesheet">
-    <div class="d-flex flex-column flex-shrink-0 p-3 sidebar-bg" style="width: 280px; height: 100%">
-    <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto sidebar-text text-decoration-none">
-      <div><img src="./assets/app_logo4.png" width="72" height="80" style="margin-right: 10px"></div>
-      <div><span class="fs-2">OenoFile</span><span class="fs-8" style="display: block; margin-top: -12px">Track Your Wine</span></div>
-    </a>
-    <hr>
-    <ul class="nav nav-pills flex-column mb-auto">
-      <li class="nav-item">
-        <router-link to="/home" class="nav-link sidebar-link" active-class="active active-bg" :class="{'active active-bg': this.$route.path == '/'}">
-          <div class="d-flex"><span class="material-icons" style="margin-right: 10px">home</span><span>Home</span></div>
-        </router-link>
-      </li>
-      <li>
-        <router-link to="/bottles" class="nav-link sidebar-link" active-class="active active-bg" v-if="authenticated">      
-          <div class="d-flex">
-            <img src="./assets/bottle_144px.png" style="margin-right: 10px" width="24px" height="24px" class="filtered" v-if="this.$route.path != '/bottles' && this.$store.state.theme.name != 'Noir (Dark)'">
-            <img src="./assets/bottle_144px_light.png" style="margin-right: 10px" width="24px" height="24px" class="filtered" v-if="this.$route.path == '/bottles' || this.$store.state.theme.name == 'Noir (Dark)'">
-            <span>Bottles</span>
+  <div style="height: 100%">
+    <div id="pleaseWait" class="h-100 w-100 position-absolute" style="background-color: rgba(0,0,0,0.6)" v-if="!enabled">
+        <div class="position-absolute top-50 start-50 translate-middle" style="z-index: 2000">
+          <div class="bg-light p-5" style="border-radius: 15px">
+            <h1>Loading...</h1>
+            <div class="progress">
+              <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%"></div>
+            </div>
           </div>
-        </router-link>
-      </li>
-      <li>
-        <router-link to="/racks" class="nav-link sidebar-link" active-class="active active-bg" v-if="authenticated">
-          <div class="d-flex"><span class="material-icons" style="margin-right: 10px">grid_on</span><span>Racks</span></div>
-        </router-link>
-      </li>
-      <li>
-        <router-link to="/history" class="nav-link sidebar-link" active-class="active active-bg" v-if="authenticated">
-          <div class="d-flex"><span class="material-icons" style="margin-right: 10px">history</span><span>History</span></div>
-        </router-link>
-      </li>      <li>
-        <router-link to="/login" v-if="!authenticated" class="nav-link sidebar-link" active-class="active active-bg">
-          <div class="d-flex"><span class="material-icons" style="margin-right: 10px">login</span><span>Log In</span></div>
-        </router-link>
-      </li>
-<!--       <li>
-        <select @change="changeTheme()" id="themeSelector" class="form-select" aria-label="Theme selector" v-model="currentThemeName">
-            <option value="Default" selected>Default</option>
-            <option value="Cabernet">Cabernet</option>
-            <option value="Chardonnay">Chardonnay</option>
-            <option value="Noir (Dark)">Noir (Dark)</option>
-        </select>
-      </li> -->
-    </ul>
-    <hr v-if="authenticated">
-    <div class="dropdown" v-if="authenticated" style="margin-bottom: 10px; margin-top: 10px">
-      <a href="#" class="d-flex align-items-center sidebar-link text-decoration-none dropdown-toggle" id="dropdownUser2" data-bs-toggle="dropdown" aria-expanded="false">
-        <span class="material-icons rounded-circle me-2 sidebar-link" style="font-size: 36px; padding:0px">account_circle</span>
-        <!-- <img src="./assets/app_logo4.png" alt="" width="36" height="40" class="rounded-circle me-2"> -->
-        <strong>My Account</strong>
+        </div>
+    </div>
+    <div id="app" class="d-flex flex-row" style="height: 100%">
+      <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+        rel="stylesheet">
+      <div class="d-flex flex-column flex-shrink-0 p-3 sidebar-bg" style="width: 280px; height: 100%">
+      <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto sidebar-text text-decoration-none">
+        <div><img src="./assets/app_logo4.png" width="72" height="80" style="margin-right: 10px"></div>
+        <div><span class="fs-2">OenoFile</span><span class="fs-8" style="display: block; margin-top: -12px">Track Your Wine</span></div>
       </a>
-      <ul class="dropdown-menu text-small shadow input-color" aria-labelledby="dropdownUser2">
-        <li class="dropdown-name">{{this.$store.state.userName}}</li>
-        <li class="dropdown-email">{{this.$store.state.userEmail}}</li>
-        <li><hr class="dropdown-divider"></li>
-        <li><router-link to="/settings" v-if="authenticated" class="dropdown-item dropdown-theme">Settings</router-link></li>
-        <!-- <li><router-link to="/profile" v-if="authenticated" class="dropdown-item dropdown-theme">Profile</router-link></li> -->
-        <li><router-link to="/import" v-if="authenticated" class="dropdown-item dropdown-theme">Import Data</router-link></li>
-        <li><hr class="dropdown-divider"></li>
-        <li><router-link to="/" v-on:click.native="logout()" class="dropdown-item dropdown-theme">Log Out</router-link></li>
+      <hr>
+      <ul class="nav nav-pills flex-column mb-auto">
+        <li class="nav-item">
+          <router-link to="/home" class="nav-link sidebar-link" active-class="active active-bg" :class="{'active active-bg': this.$route.path == '/'}">
+            <div class="d-flex"><span class="material-icons" style="margin-right: 10px">home</span><span>Home</span></div>
+          </router-link>
+        </li>
+        <li>
+          <router-link to="/bottles" class="nav-link sidebar-link" active-class="active active-bg" v-if="authenticated">      
+            <div class="d-flex">
+              <img src="./assets/bottle_144px.png" style="margin-right: 10px" width="24px" height="24px" class="filtered" v-if="this.$route.path != '/bottles' && this.$store.state.theme.name != 'Noir (Dark)'">
+              <img src="./assets/bottle_144px_light.png" style="margin-right: 10px" width="24px" height="24px" class="filtered" v-if="this.$route.path == '/bottles' || this.$store.state.theme.name == 'Noir (Dark)'">
+              <span>Bottles</span>
+            </div>
+          </router-link>
+        </li>
+        <li>
+          <router-link to="/racks" class="nav-link sidebar-link" active-class="active active-bg" v-if="authenticated">
+            <div class="d-flex"><span class="material-icons" style="margin-right: 10px">grid_on</span><span>Racks</span></div>
+          </router-link>
+        </li>
+        <li>
+          <router-link to="/history" class="nav-link sidebar-link" active-class="active active-bg" v-if="authenticated">
+            <div class="d-flex"><span class="material-icons" style="margin-right: 10px">history</span><span>History</span></div>
+          </router-link>
+        </li>      <li>
+          <router-link to="/login" v-if="!authenticated" class="nav-link sidebar-link" active-class="active active-bg">
+            <div class="d-flex"><span class="material-icons" style="margin-right: 10px">login</span><span>Log In</span></div>
+          </router-link>
+        </li>
+  <!--       <li>
+          <select @change="changeTheme()" id="themeSelector" class="form-select" aria-label="Theme selector" v-model="currentThemeName">
+              <option value="Default" selected>Default</option>
+              <option value="Cabernet">Cabernet</option>
+              <option value="Chardonnay">Chardonnay</option>
+              <option value="Noir (Dark)">Noir (Dark)</option>
+          </select>
+        </li> -->
       </ul>
-    </div>
-    </div>
-    <div class="d-flex flex-column p-2 content-bg" style="width: 100%">
-      <div id="content" style="height:100%">
-        <router-view v-on:refresh_me="refreshPage" :key='keyVal' />
+      <hr v-if="authenticated">
+      <div class="dropdown" v-if="authenticated" style="margin-bottom: 10px; margin-top: 10px">
+        <a href="#" class="d-flex align-items-center sidebar-link text-decoration-none dropdown-toggle" id="dropdownUser2" data-bs-toggle="dropdown" aria-expanded="false">
+          <span class="material-icons rounded-circle me-2 sidebar-link" style="font-size: 36px; padding:0px">account_circle</span>
+          <!-- <img src="./assets/app_logo4.png" alt="" width="36" height="40" class="rounded-circle me-2"> -->
+          <strong>My Account</strong>
+        </a>
+        <ul class="dropdown-menu text-small shadow input-color" aria-labelledby="dropdownUser2">
+          <li class="dropdown-name">{{this.$store.state.userName}}</li>
+          <li class="dropdown-email">{{this.$store.state.userEmail}}</li>
+          <li><hr class="dropdown-divider"></li>
+          <li><router-link to="/settings" v-if="authenticated" class="dropdown-item dropdown-theme">Settings</router-link></li>
+          <!-- <li><router-link to="/profile" v-if="authenticated" class="dropdown-item dropdown-theme">Profile</router-link></li> -->
+          <li><router-link to="/import" v-if="authenticated" class="dropdown-item dropdown-theme">Import Data</router-link></li>
+          <li><hr class="dropdown-divider"></li>
+          <li><router-link to="/" v-on:click.native="logout()" class="dropdown-item dropdown-theme">Log Out</router-link></li>
+        </ul>
+      </div>
+      </div>
+      <div class="d-flex flex-column p-2 content-bg" style="width: 100%">
+        <div id="content" style="height:100%">
+          <router-view v-on:refresh_me="refreshPage" :key='keyVal' v-on:view_event="handleViewEvent"/>
+        </div>
       </div>
     </div>
   </div>
@@ -78,6 +90,7 @@ export default {
   name: 'app',
   data: function () {
     return { 
+        enabled: true,
         authenticated: false,
         keyVal: 0,
         themes: [{
@@ -133,6 +146,16 @@ export default {
     '$route': 'isAuthenticated'
   },
   methods: {
+    handleViewEvent(e){
+        if(e === "disable_nav") {
+          this.enabled = false;
+          console.log('disable nav');
+        }
+        if(e === 'enable_nav') {
+          this.enabled = true;
+          console.log('enable nav');
+        }
+    },
     popupTest() {
         this.$swal({
             title: "<h3 style='color: white'>Bottle Updated. Test.</h3>",
@@ -214,7 +237,10 @@ body {
   text-align: center;
   margin: 0;
 }
-/* .active-bg {
-  background-color: #5599CC !important;
-} */
+
+.centered-container {
+    vertical-align: center;
+    position: absolute;
+    width: calc(100% - 290px);
+}
 </style>

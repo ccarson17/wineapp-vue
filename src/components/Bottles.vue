@@ -37,7 +37,8 @@ export default {
     BottleEditor,
   },
   created() {
-    this.$store.dispatch('getCurrentBottles');
+    this.$emit('view_event', 'disable_nav');
+    this.$store.dispatch('getCurrentBottles').then(this.$emit('view_event', 'enable_nav'));
   },
   data() {
     return {

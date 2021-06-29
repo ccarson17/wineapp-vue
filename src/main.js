@@ -2,6 +2,8 @@ import Vue from 'vue'
 import App from './App.vue'
 import router from './router'
 import store from './store'
+import JQuery from 'jquery'
+
 import "bootstrap/dist/css/bootstrap.min.css"
 import "bootstrap"
 import moment from 'moment';
@@ -25,7 +27,7 @@ const options = {
   padding: 25,
 };
 Vue.use(VueSweetalert2, options);
-Vue.config.productionTip = false
+Vue.config.productionTip = false;
 Vue.filter('dateFormat', function(value) {
   if (value) {
     var utcDateTime = moment.utc(String(value));
@@ -80,6 +82,8 @@ Vue.filter('locationFilter', function(city, state, region, country) {
   if(!city) return city;
   return "";
 });
+
+window.$ = JQuery;
 
 new Vue({
   router,

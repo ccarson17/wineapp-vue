@@ -32,7 +32,8 @@ export default {
   },
   created() {
     if(!this.$store.state.wineApiKey) window.location.href = "/";
-    this.$store.dispatch('getHistoryBottles');
+    this.$emit('view_event', 'disable_nav');
+    this.$store.dispatch('getHistoryBottles').then(this.$emit('view_event', 'enable_nav'));
   },
   data() {
     return {
