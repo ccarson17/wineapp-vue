@@ -1,58 +1,69 @@
 <template>
     <div class="modal fade" id="reviewModal" tabindex="-1" aria-labelledby="reviewModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
-            <div class="modal-content"  style="border-radius: 15px">
+            <div class="modal-content" style="border-radius: 15px">
                 <div class="modal-header text-default-alt header-bg-color">
                     <div class="modal-title" id="bottleDetailsModalLabel" style="width: 100%">
                         <table style="text-align: left; width: 100%">
                             <tr>
-                            <td><h5 style="margin: 0px">{{bottle.vintner}}</h5></td>
-                            <td style="text-align: right"><button id="xReviewClose" type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button></td>
+                                <td><h5 style="margin: 0px">{{localBottle.vintner}}</h5></td>
+                                <td style="text-align: right"><button id="xReviewClose" type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button></td>
                             </tr>
                             <tr>
-                            <td><h5 style="margin: 0px">{{bottle.wineName}}</h5></td>
+                                <td><h5 style="margin: 0px">{{localBottle.wineName}}</h5></td>
                             </tr>
                             <tr>
-                            <td><span style="margin: 0px">{{bottle.city_Town | locationFilter(bottle.state_Province, bottle.region, bottle.country)}}</span></td>
+                                <td>
+                                    <span style="margin: 0px">
+                                        {{ locationFilter(localBottle.city_Town, localBottle.state_Province, localBottle.region, localBottle.country) }}
+                                    </span>
+                                </td>
                             </tr>
                         </table>
-                    </div>             
+                    </div>
                 </div>
                 <div class="modal-body bg-default text-default">
                     <div class="col d-flex justify-content-center px-4 py-2">
                         <label for="formRating" class="form-label fw-bold form-label text-nowrap my-auto">Your Rating</label>
-                        <input type="range" class="custom-range mx-4 input-color" min="1" max="10" id="formRating" v-model="bottle.user_rating">
+                        <input type="range" class="custom-range mx-4 input-color" min="1" max="10" id="formRating" v-model="localBottle.user_rating">
 
-                        <img src="@/assets/baseline_star_border_black_48dp_empty.png" style="opacity: 0.4" width="24" height="24" v-if="!bottle.user_rating">
-                        <img src="@/assets/baseline_star_border_black_48dp_empty.png" style="opacity: 0.4" width="24" height="24" v-if="!bottle.user_rating">
-                        <img src="@/assets/baseline_star_border_black_48dp_empty.png" style="opacity: 0.4" width="24" height="24" v-if="!bottle.user_rating">
-                        <img src="@/assets/baseline_star_border_black_48dp_empty.png" style="opacity: 0.4" width="24" height="24" v-if="!bottle.user_rating">
-                        <img src="@/assets/baseline_star_border_black_48dp_empty.png" style="opacity: 0.4" width="24" height="24" v-if="!bottle.user_rating">
+                        <!-- Only show these 5 empty stars if there is no rating -->
+                        <template v-if="!localBottle.user_rating">
+                            <img v-for="i in 5"
+                                 :key="'empty-'+i"
+                                 src="@/assets/baseline_star_border_black_48dp_empty.png"
+                                 style="opacity: 0.4"
+                                 width="24"
+                                 height="24">
+                        </template>
 
-                        <img src="@/assets/baseline_star_border_black_48dp_empty.png" width="24" height="24" v-if="parseInt(bottle.user_rating) < 1">
-                        <img src="@/assets/baseline_star_border_black_48dp_half.png" width="24" height="24" v-if="parseInt(bottle.user_rating) == 1">
-                        <img src="@/assets/baseline_star_border_black_48dp_full.png" width="24" height="24" v-if="parseInt(bottle.user_rating) >= 2">
+                        <!-- The following blocks are for each star pair (empty/half/full) -->
+                        <template v-if="localBottle.user_rating">
+                            <img src="@/assets/baseline_star_border_black_48dp_empty.png" width="24" height="24" v-if="parseInt(localBottle.user_rating) < 1">
+                            <img src="@/assets/baseline_star_border_black_48dp_half.png" width="24" height="24" v-if="parseInt(localBottle.user_rating) == 1">
+                            <img src="@/assets/baseline_star_border_black_48dp_full.png" width="24" height="24" v-if="parseInt(localBottle.user_rating) >= 2">
 
-                        <img src="@/assets/baseline_star_border_black_48dp_empty.png" width="24" height="24" v-if="parseInt(bottle.user_rating) < 3">
-                        <img src="@/assets/baseline_star_border_black_48dp_half.png" width="24" height="24" v-if="parseInt(bottle.user_rating) == 3">
-                        <img src="@/assets/baseline_star_border_black_48dp_full.png" width="24" height="24" v-if="parseInt(bottle.user_rating) >= 4">
+                            <img src="@/assets/baseline_star_border_black_48dp_empty.png" width="24" height="24" v-if="parseInt(localBottle.user_rating) < 3">
+                            <img src="@/assets/baseline_star_border_black_48dp_half.png" width="24" height="24" v-if="parseInt(localBottle.user_rating) == 3">
+                            <img src="@/assets/baseline_star_border_black_48dp_full.png" width="24" height="24" v-if="parseInt(localBottle.user_rating) >= 4">
 
-                        <img src="@/assets/baseline_star_border_black_48dp_empty.png" width="24" height="24" v-if="parseInt(bottle.user_rating) < 5">
-                        <img src="@/assets/baseline_star_border_black_48dp_half.png" width="24" height="24" v-if="parseInt(bottle.user_rating) == 5">
-                        <img src="@/assets/baseline_star_border_black_48dp_full.png" width="24" height="24" v-if="parseInt(bottle.user_rating) >= 6">
-                        
-                        <img src="@/assets/baseline_star_border_black_48dp_empty.png" width="24" height="24" v-if="parseInt(bottle.user_rating) < 7">
-                        <img src="@/assets/baseline_star_border_black_48dp_half.png" width="24" height="24" v-if="parseInt(bottle.user_rating) == 7">
-                        <img src="@/assets/baseline_star_border_black_48dp_full.png" width="24" height="24" v-if="parseInt(bottle.user_rating) >= 8">
+                            <img src="@/assets/baseline_star_border_black_48dp_empty.png" width="24" height="24" v-if="parseInt(localBottle.user_rating) < 5">
+                            <img src="@/assets/baseline_star_border_black_48dp_half.png" width="24" height="24" v-if="parseInt(localBottle.user_rating) == 5">
+                            <img src="@/assets/baseline_star_border_black_48dp_full.png" width="24" height="24" v-if="parseInt(localBottle.user_rating) >= 6">
 
-                        <img src="@/assets/baseline_star_border_black_48dp_empty.png" width="24" height="24" v-if="parseInt(bottle.user_rating) < 9">
-                        <img src="@/assets/baseline_star_border_black_48dp_half.png" width="24" height="24" v-if="parseInt(bottle.user_rating) == 9">
-                        <img src="@/assets/baseline_star_border_black_48dp_full.png" width="24" height="24" v-if="parseInt(bottle.user_rating) == 10">
-                    </div>  
+                            <img src="@/assets/baseline_star_border_black_48dp_empty.png" width="24" height="24" v-if="parseInt(localBottle.user_rating) < 7">
+                            <img src="@/assets/baseline_star_border_black_48dp_half.png" width="24" height="24" v-if="parseInt(localBottle.user_rating) == 7">
+                            <img src="@/assets/baseline_star_border_black_48dp_full.png" width="24" height="24" v-if="parseInt(localBottle.user_rating) >= 8">
+
+                            <img src="@/assets/baseline_star_border_black_48dp_empty.png" width="24" height="24" v-if="parseInt(localBottle.user_rating) < 9">
+                            <img src="@/assets/baseline_star_border_black_48dp_half.png" width="24" height="24" v-if="parseInt(localBottle.user_rating) == 9">
+                            <img src="@/assets/baseline_star_border_black_48dp_full.png" width="24" height="24" v-if="parseInt(localBottle.user_rating) == 10">
+                        </template>
+                    </div>
                     <div class="col d-flex justify-content-center px-4 py-2">
                         <label for="formReview" class="form-label fw-bold form-label text-nowrap my-auto mx-4">Your Review</label>
-                        <textarea id="formReview" name="formReview" class="form-control input-color" style="width: 42%; max-width: 400px" v-model="bottle.user_notes" rows="4" cols="50" />
-                    </div>                                               
+                        <textarea id="formReview" name="formReview" class="form-control input-color" style="width: 42%; max-width: 400px" v-model="localBottle.user_notes" rows="4" cols="50" />
+                    </div>
                 </div>
                 <div class="modal-footer bg-default text-default" style="position: relative">
                     <button v-if="saving == true" type="button" class="btn btn-primary" style="width: 175px">
@@ -67,63 +78,88 @@
                 </div>
             </div>
         </div>
-    </div> 
+    </div>
 </template>
 
 <script>
-export default {
-    name: 'RatingModal',
-    props: {
-        bottle: {
+    export default {
+        name: 'RatingModal',
+        props: {
+            bottle: Object,
         },
-    },
-    data() {
-      return {
-        saving: false,
-        rating: null,
-        review: null,
-      }
-    },
-    created() {
-        this.rating = this.bottle.user_rating;
-        this.review = this.bottle.user_notes;
-    },
-    methods: {
-        saveAndClose() {
-            var context = this;
-            this.saving = true;
-            if(this.bottle.guid) {
-                this.$store.dispatch('updateBottle', this.bottle)
-                    .then(function(){
-                        context.$swal({
-                            title: "<h3 style='color: white'>Bottle Updated.</h3>",
-                            background: context.$store.state.theme.swalColor,
-                        });
-                        context.$store.dispatch('getHistoryBottles');
-                        context.saving = false;
-                        document.getElementById('xReviewClose').click();
-                    }, error => {      
-                        var responseDetail = error.response.status == "400" ? error.response.data : error.response.status + " (" + error.response.statusText + ")"       
-                        context.$swal({
-                            icon: 'error',
-                            title: "<h3 style='color: white'>Update (Review) Error: Response - " + responseDetail + "</h3>",
-                            background: context.$store.state.theme.swalColor,
-                        });
-                        context.saving = false;
-                    });  
+        data() {
+            return {
+                saving: false,
+                localBottle: { ...this.bottle }
             }
         },
-        cancel() {
-            this.bottle.user_rating = this.rating;
-            this.bottle.user_notes = this.review;
-            document.getElementById('xReviewClose').click();
-            this.$store.dispatch('getHistoryBottles');
+        watch: {
+            bottle: {
+                handler(newVal) {
+                    this.localBottle = { ...newVal }
+                },
+                deep: true
+            }
         },
-    },
-}
+        methods: {
+            saveAndClose() {
+                this.saving = true;
+                if (this.localBottle.guid) {
+                    this.$store.dispatch('updateBottle', this.localBottle)
+                        .then(() => {
+                            this.$emit('update', { ...this.localBottle }); // notify parent
+                            this.$swal({
+                                title: "<h3 style='color: white'>Bottle Updated.</h3>",
+                                background: this.$store.state.theme.swalColor,
+                            });
+                            this.$store.dispatch('getHistoryBottles');
+                            this.saving = false;
+                            document.getElementById('xReviewClose').click();
+                        }, error => {
+                            var responseDetail = error.response.status == "400" ? error.response.data : error.response.status + " (" + error.response.statusText + ")"
+                            this.$swal({
+                                icon: 'error',
+                                title: "<h3 style='color: white'>Update (Review) Error: Response - " + responseDetail + "</h3>",
+                                background: this.$store.state.theme.swalColor,
+                            });
+                            this.saving = false;
+                        });
+                }
+            },
+            cancel() {
+                this.localBottle = { ...this.bottle }; // reset local copy
+                document.getElementById('xReviewClose').click();
+                this.$store.dispatch('getHistoryBottles');
+            },
+            locationFilter(city, state, region, country) {
+                if (region && state && country) {
+                    if (country.toUpperCase() == "USA")
+                        return region + ", " + state
+                    else return region + ", " + state + ", " + country
+                }
+                if (region && !state && country) {
+                    if (country.toUpperCase() == "USA")
+                        return region + ", " + country.toUpperCase()
+                    else return region + ", " + country
+                }
+                if (region && state && !country) return region + ", " + state
+                if (city && state && country) return city + ", " + state + ", " + country
+                if (city && !state && country) return city + ", " + country
+                if (city && state && !country) return city + ", " + state
+                if (!city && !region && !state && country) return country
+                if (!city && !region && state && !country) return state
+                if (!city && region && !state && !country) return region
+                if (city && !region && !state && !country) return city
+                if (!city && !region && state && country) return state + ", " + country
+                if (!country) return country
+                if (!region) return region
+                if (!state) return state
+                if (!city) return city
+                return ""
+            }
+        }
+    }
 </script>
 
-<style scoped>  
+<style scoped>
 </style>
-
-

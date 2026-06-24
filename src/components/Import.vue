@@ -7,7 +7,7 @@
     </div>
     <div v-if="json" class="d-flex justify-content-center my-4">
         <div class="row row-cols-3">
-          <div v-for="(bottle, idx) in bottles" :key="idx" class="col" style="display: flex; position: relative; cursor: pointer" data-bs-toggle="modal" @click="function() {setCurrentBottle(bottle.import_id); modalTitle='Edit Bottle';}" data-bs-target="#bottleEditorModal0">
+          <div v-for="(bottle, idx) in bottles" :key="idx" class="col" style="display: flex; position: relative; cursor: pointer" data-bs-toggle="modal" @click="setCurrentBottle(bottle.import_id); modalTitle='Edit Bottle';" data-bs-target="#bottleEditorModal0">
             <BottleCard :bottle="bottle" :cardDarken="isError.find(x => x.key == bottle.import_id)" />   
             <div v-if="!isError.find(x => x.key == bottle.import_id) && !isUploaded.find(x => x.key == bottle.import_id) && saving" class="d-flex justify-content-center" style="flex-wrap: wrap; position: absolute; top: 35%; left: 0; bottom: 0; right: 0; height: 100%">
               <span class="spinner-border spinner-border text-primary" style="font-size: 24px" role="status" aria-hidden="true"></span>

@@ -11,7 +11,7 @@
                     </div>
                     <div class="modal-body bg-default text-default">
                         <h5>Add New Bottle</h5>
-                        <button type="button" class="btn btn-primary" style="width: 200px; margin-bottom: 10px" @click="function() {setCurrentBottle(); modalTitle='Add New Bottle';}" data-bs-toggle="modal" :data-bs-target="'#bottleEditorModalUnassigned' + index">
+                        <button type="button" class="btn btn-primary" style="width: 200px; margin-bottom: 10px" @click="setCurrentBottle(); modalTitle='Add New Bottle';" data-bs-toggle="modal" :data-bs-target="'#bottleEditorModalUnassigned' + index">
                             <div class="d-flex justify-content-center"><span class="material-icons" style="margin-right: 5px; font-size: 36px">add</span><span style="font-size: 22px; margin-right: 10px;">Add Bottle</span></div>
                         </button>   
                         <h5>or</h5>                     
@@ -25,7 +25,11 @@
             </div>
         </div> 
         <!-- Bottle Edit/Create Modal -->
-        <BottleEditor :index="'Unassigned' + index" :bottle="selectedBottle" title="Add New Bottle" modalType="current" />
+        <BottleEditor :index="'Unassigned' + index"
+                      :bottle="selectedBottle"
+                      title="Add New Bottle"
+                      modalType="current"
+                      @update="handleBottleUpdate" />
     </div>
 </template>
 
@@ -41,7 +45,7 @@ export default {
         rack_name: {},
         row: {},
         col: {},
-        bottles: [],
+        bottles: {},
     },
 /*     computed: {
         bottles() {
@@ -65,18 +69,18 @@ export default {
         addBottleToRack(bottle) {
             console.log("Add bottle to R: " + this.row + ", C: " + this.col + " on " + this.rack_name);
             console.log(bottle);
-            var context = this;
             this.$store.dispatch('addBottleToRack', [ bottle, this.rack_name, this.row, this.col ])
-                .then(function(){
-                    context.$swal({
+                .then(() => {
+                    this.$swal({
                         title: "<h3 style='color: white'>Bottle Added to Rack!</h3>",
+                        background: this.$store.state.theme.swalColor,
                     });
-                    context.$store.dispatch('getCurrentBottles');
-                    context.$store.dispatch('getUnassignedBottles');
+                    this.$store.dispatch('getCurrentBottles');
+                    this.$store.dispatch('getUnassignedBottles');
                     document.getElementById('xUnassignedClose').click();
                 }, error => {        
                     var responseDetail = error.response.status == "400" ? error.response.data : error.response.status + " (" + error.response.statusText + ")"            
-                    context.$swal({
+                    this.$swal({
                         icon: 'error',
                         title: "<h3 style='color: white'>Add Bottle to Rack Error: API response - " + responseDetail + "</h3>",
                     });
@@ -89,6 +93,42 @@ export default {
                 col: this.col,
             };
         },
+        handleBottleUpdate(updatedBottle) {
+            const context = this;
+            let action, successMsg, errorMsg;
+            let isUpdate = !!updatedBottle.guid;
+
+            if (isUpdate) {
+                action = this.$store.dispatch('updateBottle', updatedBottle);
+                successMsg = "<h3 style='color: white'>Bottle Updated.</h3>";
+                errorMsg = "Update Error: Response - ";
+            } else {
+                action = this.$store.dispatch('createBottle', updatedBottle);
+                successMsg = "<h3 style='color: white'>Success! A new bottle has been added to your collection.</h3>";
+                errorMsg = "Create Error: Response - ";
+            }
+
+            action.then(() => {
+                context.$swal({
+                    title: successMsg,
+                    background: context.$store.state.theme.swalColor,
+                });
+                context.$store.dispatch('getCurrentBottles');
+                context.$store.dispatch('getUnassignedBottles');
+                document.getElementById('xEditCloseUnassigned' + context.index)?.click();
+            }).catch(error => {
+                var responseDetail = error.response?.status == "400"
+                    ? error.response.data
+                    : error.response?.status + " (" + error.response?.statusText + ")";
+                context.$swal({
+                    icon: 'error',
+                    title: `<h3 style='color: white'>${errorMsg}${responseDetail}</h3>`,
+                    background: context.$store.state.theme.swalColor,
+                });
+            });
+
+            Object.assign(this.selectedBottle, updatedBottle);
+        }
     },
 }
 </script>

@@ -9,7 +9,7 @@
       <!-- Bottle Details Modal -->
       <BottleModal index="0" :selectedBottle="selectedBottle" modalType="history" />
       <!-- Bottle Edit/Create Modal -->
-      <BottleEditor index="0" :bottle="selectedBottle" title="Edit Bottle" modalType="history" />
+      <BottleEditor @update="handleBottleUpdate" index="0" :bottle="selectedBottle" title="Edit Bottle" modalType="history" />
   </div>
 </template>
 
@@ -19,37 +19,73 @@ import BottleCard from './shared/BottleCard';
 import BottleEditor from './shared/BottleEditor';
 
 export default {
-  name: 'Bottles',
-  computed: {
-    bottles() {
-      return this.$store.state.historyBottles;
+    name: 'HistoryView',
+    computed: {
+        bottles() {
+            return this.$store.state.historyBottles;
+        },
     },
-  },
-  components: {
+    components: {
     BottleModal,
     BottleCard,
     BottleEditor,
-  },
-  created() {
-    if(!this.$store.state.wineApiKey) window.location.href = "/";
-    this.$emit('view_event', 'disable_nav');
-    this.$store.dispatch('getHistoryBottles').then(this.$emit('view_event', 'enable_nav'));
-  },
-  data() {
-    return {
-      selectedBottle: {
-        vintner: {},
-        wineName: {},
-        region: {},
-      },
-    }
-  },
-  methods: {
-    setCurrentBottle(bottleId) {
-      var bots = this.$store.getters['pullHistoryBottles'];
-      this.selectedBottle = bots[bots.findIndex(item => item.guid === bottleId)];
     },
-  },
+    created() {
+        if(!this.$store.state.wineApiKey) window.location.href = "/";
+        this.$emit('view_event', 'disable_nav');
+        this.$store.dispatch('getHistoryBottles').then(this.$emit('view_event', 'enable_nav'));
+    },
+    data() {
+        return {
+            selectedBottle: {
+            vintner: {},
+            wineName: {},
+            region: {},
+            },
+        }
+    },
+    methods: {
+        setCurrentBottle(bottleId) {
+            var bots = this.$store.getters['pullHistoryBottles'];
+            this.selectedBottle = bots[bots.findIndex(item => item.guid === bottleId)];
+        },
+        async handleBottleUpdate(updatedBottle) {
+            let action, successMsg, errorMsg;
+            let isUpdate = !!updatedBottle.guid;
+
+            if (isUpdate) {
+                action = this.$store.dispatch('updateBottle', updatedBottle);
+                successMsg = "<h3 style='color: white'>Bottle Updated.</h3>";
+                errorMsg = "Update Error: Response - ";
+            } else {
+                action = this.$store.dispatch('createBottle', updatedBottle);
+                successMsg = "<h3 style='color: white'>Success! A new bottle has been added to your collection.</h3>";
+                errorMsg = "Create Error: Response - ";
+            }
+
+            try {
+                await action;
+                this.$swal({
+                    title: successMsg,
+                    background: this.$store.state.theme.swalColor,
+                });
+                // Always refresh history bottles in this view
+                await this.$store.dispatch('getHistoryBottles');
+                // Optionally close the modal if needed
+                document.getElementById('xEditClose0')?.click();
+            } catch (error) {
+                var responseDetail = error.response?.status == "400"
+                    ? error.response.data
+                    : error.response?.status + " (" + error.response?.statusText + ")";
+                this.$swal({
+                    icon: 'error',
+                    title: `<h3 style='color: white'>${errorMsg}${responseDetail}</h3>`,
+                    background: this.$store.state.theme.swalColor,
+                });
+            }
+            Object.assign(this.selectedBottle, updatedBottle);
+        },
+    },
 }
 </script>
 

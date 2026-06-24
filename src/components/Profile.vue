@@ -34,7 +34,7 @@
 
 <script>
 export default {
-  name: 'Profile',
+  name: 'ProfileView',
   data () {
     return {
       claims: [],

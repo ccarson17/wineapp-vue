@@ -10,21 +10,27 @@
         </div>
         <table class="rack-table">
             <tr class="rack-row" v-for="(r, idxr) in rack.rows" :key="idxr">
-               <td class="rack-cell" v-for="(c, idxc) in rack.cols" :key="idxc" data-bs-toggle="modal" @click="function() {setCurrentBottle(r,c); modalTitle='Edit Bottle';}" :data-bs-target="currentBottle(r,c).category ? '#bottleDetailsModal' + index : '#unassignedBottlesModal' + index">
-                   <img class="rack-img" v-if="currentBottle(r,c).category == 'Red'" width="50px" height="50px" src="@/assets/rack-bottle-red.png">
-                   <img class="rack-img" v-if="currentBottle(r,c).category == 'White'" width="50px" height="50px" src="@/assets/rack-bottle-white.png">
-                   <img class="rack-img" v-if="currentBottle(r,c).category == 'Sparkling / Champagne'" width="50px" height="50px" src="@/assets/rack-bottle-sparkling.png">
-                   <img class="rack-img" v-if="currentBottle(r,c).category == 'Dessert / Port / Sherry'" width="50px" height="50px" src="@/assets/rack-bottle-dessert.png">
-                   <img class="rack-img" v-if="currentBottle(r,c).category == 'Rosé'" width="50px" height="50px" src="@/assets/rack-bottle-rose.png">
-                   <img class="rack-img" v-if="!currentBottle(r,c).category" @mouseenter="forceRerender()" width="50px" height="50px" src="@/assets/rack-bottle-empty.png">
+                <td class="rack-cell" v-for="(c, idxc) in rack.cols" :key="idxc" data-bs-toggle="modal" @click="setCurrentBottle(r,c); modalTitle='Edit Bottle';" :data-bs-target="currentBottle(r,c).category ? '#bottleDetailsModal' + index : '#unassignedBottlesModal' + index">
+                    <img class="rack-img" v-if="currentBottle(r,c).category == 'Red'" width="50px" height="50px" src="@/assets/rack-bottle-red.png">
+                    <img class="rack-img" v-if="currentBottle(r,c).category == 'White'" width="50px" height="50px" src="@/assets/rack-bottle-white.png">
+                    <img class="rack-img" v-if="currentBottle(r,c).category == 'Sparkling / Champagne'" width="50px" height="50px" src="@/assets/rack-bottle-sparkling.png">
+                    <img class="rack-img" v-if="currentBottle(r,c).category == 'Dessert / Port / Sherry'" width="50px" height="50px" src="@/assets/rack-bottle-dessert.png">
+                    <img class="rack-img" v-if="currentBottle(r,c).category == 'Rosé'" width="50px" height="50px" src="@/assets/rack-bottle-rose.png">
+                    <img class="rack-img" v-if="!currentBottle(r,c).category" @mouseenter="forceRerender()" width="50px" height="50px" src="@/assets/rack-bottle-empty.png">
                 </td>
             </tr>
         </table>
         <!-- Bottle Details Modal -->
-        <BottleModal :index="index" :selectedBottle="selectedBottle" modalType="racks" />
+        <BottleModal :index="index"
+                     :selectedBottle="selectedBottle"
+                     modalType="racks" /> 
         <!-- Bottle Edit/Create Modal -->
-        <BottleEditor :index="index" :bottle="selectedBottle" :title="modalTitle" modalType="current" />
-         <!-- Unassigned Bottle Modal -->
+        <BottleEditor :index="index"
+                      :bottle="selectedBottle"
+                      :title="modalTitle"
+                      modalType="current"
+                      @update="handleBottleUpdate" />
+        <!-- Unassigned Bottle Modal -->
         <UnassignedBottleModal :index="index" :rack_name="this.rack.rack_name" :row="row" :col="col" :bottles="unassigned" :key="componentKey" />
     </div>  
 </template>
@@ -65,6 +71,9 @@ export default {
         }
     },
     methods: {
+        handleBottleUpdate(updatedBottle) {
+            this.$emit('update', updatedBottle);
+        },
         forceRerender() {
             this.componentKey += 1;
         },

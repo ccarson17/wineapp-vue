@@ -1,13 +1,8 @@
-import Vue from 'vue';
-import Vuex from 'vuex';
-import axios from 'axios';
-import createPersistedState from 'vuex-persistedstate';
-import { VueCsvImport } from 'vue-csv-import';
+import { createStore } from 'vuex'
+import axios from 'axios'
+import createPersistedState from 'vuex-persistedstate'
 
-Vue.use(Vuex);
-
-export default new Vuex.Store({
-    components: { VueCsvImport },
+export default createStore({
     plugins: [createPersistedState({
         storage: window.sessionStorage,
     })],
@@ -25,12 +20,11 @@ export default new Vuex.Store({
         theme: null,
     },
     mutations: {
-        updateUserProfile(state, oktaProfile) {
-            // console.log(oktaProfile);
-            state.wineApiKey = oktaProfile.apiUserId;
-            state.userName = oktaProfile.name;
-            state.userEmail = oktaProfile.email;
-            state.given_name = oktaProfile.given_name;
+        updateUserProfile(state, msalProfile) {
+            state.wineApiKey = msalProfile.apiUserId;
+            state.userName = msalProfile.name;
+            state.userEmail = msalProfile.email;
+            state.given_name = msalProfile.given_name;
         },
         updateBottlesFromApi(state, bottles) {
             state.bottles = bottles;
@@ -55,34 +49,8 @@ export default new Vuex.Store({
         },
     },
     actions: {
-        getWineApiKey({ commit }, claims) {
-          axios.get(process.env.VUE_APP_API_URL + '/users/' + claims.sub)
-            .then(result => commit('updateUserProfile', result.data))
-            .catch(console.error);
-            return new Promise((resolve, reject) => {
-                axios.get(process.env.VUE_APP_API_URL + '/users/' + claims.sub)
-                    .then((result) => {
-                        commit('updateUserProfile', result.data);
-                            resolve(result);
-                        }, error => {
-                            reject(error);
-                    });
-            }) 
-        },
         changeTheme({ commit }, theme) {
-/*             if(state.oktaProfile && theme.name) {
-                console.log("theme name " + theme.name);
-                state.oktaProfile.siteTheme = theme.name;
-                return new Promise((resolve, reject) => {
-                    axios.post('/api/users/' + state.oktaProfile.sub, state.oktaProfile)
-                        .then((result) => { */
-                            commit('changeTheme', theme);
- /*                            resolve(result);
-                        }, error => {
-                            reject(error);
-                        });
-                }) 
-            }  */           
+            commit('changeTheme', theme); // TO DO: Get theme from user profile/preferences
         },
         getBottles({ commit, state }) {
             console.log("getting bottles...");
@@ -90,12 +58,15 @@ export default new Vuex.Store({
             return new Promise((resolve, reject) => {
                 axios.get(process.env.VUE_APP_API_URL + '/userbottles?owner_guid=' + state.wineApiKey, { headers })
                     .then((result) => {
-                            console.log("in then...");
-                            commit('updateBottlesFromApi', result.data);
-                            resolve(result);
-                        }, error => {
-                            console.log("in error...");
+                        console.log("in then...");
+                        commit('updateBottlesFromApi', result.data);
+                        resolve(result);
+                    }, error => {
+                        if (error.response && error.response.status === 404) {
+                            commit('updateBottlesFromApi', []);
+                        } else {
                             reject(error);
+                        }
                     });
             }) 
         },
@@ -107,7 +78,11 @@ export default new Vuex.Store({
                         commit('updateCurrentBottlesFromApi', result.data);
                         resolve(result);
                     }, error => {
-                        reject(error);
+                        if (error.response && error.response.status === 404) {
+                            commit('updateCurrentBottlesFromApi', []);
+                        } else {
+                            reject(error);
+                        }
                     });
             }) 
         },
@@ -119,7 +94,11 @@ export default new Vuex.Store({
                         commit('updateHistoryBottlesFromApi', result.data);
                         resolve(result);
                     }, error => {
-                        reject(error);
+                        if (error.response && error.response.status === 404) {
+                            commit('updateHistoryBottlesFromApi', []);
+                        } else {
+                            reject(error);
+                        }
                     });
             }) 
         },
@@ -131,11 +110,11 @@ export default new Vuex.Store({
                         commit('updateUnassignedBottlesFromApi', result.data);
                         resolve(result);
                     }, error => {
-                        if(error.response.status == 404) {
+                        if (error.response && error.response.status === 404) {
                             commit('updateUnassignedBottlesFromApi', []);
-                            console.clear()
+                        } else {
+                            reject(error);
                         }
-                        else reject(error);
                     });
             }) 
         },
@@ -343,8 +322,12 @@ export default new Vuex.Store({
                     .then((result) => {
                             commit('updateRacksFromApi', result.data);
                             resolve(result);
-                        }, error => {
+                    }, error => {
+                        if (error.response && error.response.status === 404) {
+                            commit('updateRacksFromApi', []);
+                        } else {
                             reject(error);
+                        }
                     });
             }) 
         },
@@ -416,4 +399,4 @@ export default new Vuex.Store({
             return state.lastApiRequestStatus;
         },
     }
-});
+})
