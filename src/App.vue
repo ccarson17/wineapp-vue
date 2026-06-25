@@ -158,6 +158,7 @@
                 this.msalInstance.loginRedirect();
             },
             logout() {
+                this.$store.commit('clearUserData');
                 this.msalInstance.logout();
                 this.$router.push('/home');
             },

@@ -47,6 +47,17 @@ export default createStore({
         changeTheme(state, theme) {
             state.theme = theme;
         },
+        clearUserData(state) {
+            state.wineApiKey = null;
+            state.userName = null;
+            state.userEmail = null;
+            state.given_name = null;
+            state.bottles = [];
+            state.racks = [];
+            state.currentBottles = [];
+            state.historyBottles = [];
+            state.unassignedBottles = [];
+        },
     },
     actions: {
         changeTheme({ commit }, theme) {

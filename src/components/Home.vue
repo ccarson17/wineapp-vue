@@ -51,13 +51,11 @@
                 this.msalInstance.loginRedirect();
             },
             async fetchApiKeyIfNeeded() {
-                if (
-                    this.isAuthenticated &&
-                    this.claims === '' &&
-                    this.user
-                ) {
+                if (this.isAuthenticated && this.claims === '' && this.user) {
+                    if (this.$store.state.wineApiKey && this.$store.state.wineApiKey !== this.user.localAccountId) {
+                        this.$store.commit('clearUserData');
+                    }
                     this.claims = this.user.localAccountId;
-                    // Commit user info directly from MSAL account object
                     this.$store.commit('updateUserProfile', {
                         apiUserId: this.user.localAccountId,
                         name: this.user.name || this.user.username || '',
